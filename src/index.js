@@ -1,19 +1,37 @@
 // ./src/index.js
 
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { createStore } from 'redux';
-import { Provider } from 'react-redux'; /* code change */
-import shoppingListItemReducer from './reducers/shoppingListItemReducer.js';
-import App from './App';
-import './index.css';
-
-const store = createStore(shoppingListItemReducer);
-
-// code change - added Provider to wrap around App
-ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider> /* code change */,
-  document.getElementById('root')
-);
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import './App.css';
+ 
+class App extends Component {
+  handleOnClick = event => {
+    this.props.increaseCount();
+  };
+ 
+  render() {
+    return (
+      <div className="App">
+        <button onClick={this.handleOnClick}>Click</button>
+        <p>{this.props.items.length}</p>
+      </div>
+    );
+  }
+}
+ 
+const mapStateToProps = state => {
+  return {
+    items: state.items
+  };
+};
+ 
+const mapDispatchToProps = dispatch => {
+  return {
+    increaseCount: () => dispatch({ type: 'INCREASE_COUNT' })
+  };
+};
+ 
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
